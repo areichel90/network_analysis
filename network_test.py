@@ -8,10 +8,11 @@ class run_test:
     def run_test(test_count=5):
         bps_mbps = 1000**2
         print("\n--- Running WiFi Test ---")
-        servers, run_dict=[], {}
-        device_ip = socket.gethostbyname(socket.gethostname())
+        ip = subprocess.check_output('ipconfig getifaddr en0', shell=True).decode('UTF-8')#.split('\n')[0]
+        device_ip = str(ip.split('\n')[0])
         print(device_ip)
-
+        
+        servers, run_dict=[], {}
         try:
             wifi = speedtest.Speedtest()
             #wifi.get_servers(servers)
