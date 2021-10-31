@@ -10,8 +10,9 @@ class run_test:
         print("\n--- Running WiFi Test ---")
         ip = subprocess.check_output('ipconfig getifaddr en0', shell=True).decode('UTF-8')#.split('\n')[0]
         device_ip = str(ip.split('\n')[0])
-        print(device_ip)
-        
+        device_ssid = run_test.get_ssid()["SSID"]
+        print(f"{device_ssid}:  {device_ip}")
+
         servers, run_dict=[], {}
         try:
             wifi = speedtest.Speedtest()
@@ -26,6 +27,7 @@ class run_test:
                 upload = wifi.upload()/(bps_mbps)
                 test_results = {"down":round(download,2),
                                     "up":round(upload,2),
+                                    "device_ssid":device_ssid,
                                     "device_ip":device_ip}
                 run_dict[run_time] = test_results
 
@@ -38,9 +40,22 @@ class run_test:
 
             test_results = {"down":np.nan,
                             "up":np.nan,
+                            "device_ssid":"None",
                             "device_ip":"None"}
             run_dict[run_time] = test_results
         return run_dict
+
+    def get_ssid():
+        ssid=subprocess.check_output("airport -I", shell=True)
+        ssid = ssid.decode('UTF-8')
+        params_dict = {}
+        for i in ssid.split("\n"):
+            i = i.strip(' ')
+            i_parts= i.split(':')
+            params_dict[i_parts[0]] = ''.join((i_parts[1:]))
+        
+        return params_dict
+
 
     def restuls_to_df(run_dict):
         df = pd.DataFrame.from_dict(run_dict, orient='index')
