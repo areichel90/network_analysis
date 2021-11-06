@@ -1,6 +1,7 @@
 
 import pandas as pd
 import numpy as np
+import netifaces as ni
 import datetime, subprocess, socket
 import speedtest, sys, os, time
 
@@ -8,9 +9,13 @@ class run_test:
     def run_test(test_count=5):
         bps_mbps = 1000**2
         print("\n--- Running WiFi Test ---")
-        ip = subprocess.check_output('ipconfig getifaddr en0', shell=True).decode('UTF-8')#.split('\n')[0]
-        device_ip = str(ip.split('\n')[0])
-        device_ssid = run_test.get_ssid()["SSID"]
+        try:
+            ip = subprocess.check_output('ipconfig getifaddr en0', shell=True).decode('UTF-8')#.split('\n')[0]
+            device_ip = str(ip.split('\n')[0])
+        except:
+            device_ip = ni.ifaddresses('wlan0')[ni.AF_INET][0]['addr']
+            
+        device_ssid = run_test.get_ssid()['SSID']
         print(f"{device_ssid}:  {device_ip}")
 
         servers, run_dict=[], {}
@@ -46,14 +51,19 @@ class run_test:
         return run_dict
 
     def get_ssid():
-        ssid=subprocess.check_output("airport -I", shell=True)
-        ssid = ssid.decode('UTF-8')
-        params_dict = {}
-        for i in ssid.split("\n"):
-            i = i.strip(' ')
-            i_parts= i.split(':')
-            params_dict[i_parts[0]] = ''.join((i_parts[1:]))
-        
+        try:
+            ssid=subprocess.check_output("airport -I", shell=True)
+            ssid = ssid.decode('UTF-8')
+            params_dict = {}
+            for i in ssid.split("\n"):
+                i = i.strip(' ')
+                i_parts= i.split(':')
+                params_dict[i_parts[0]] = ''.join((i_parts[1:]))
+        except:
+            ssid = subprocess.check_output('iwgetid', shell=True) 
+            ssid = ssid.decode('UTF-8')
+            ssid = ssid.split('ESSID:')[1].split('\n')[0]
+            params_dict={'SSID':ssid}        
         return params_dict
 
 
