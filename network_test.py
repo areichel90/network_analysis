@@ -6,9 +6,14 @@ import datetime, subprocess, socket
 import speedtest, sys, os, time
 
 class run_test:
+    def __init__(self, os_):
+        print(os_)
+
     def run_test(test_count=5):
         bps_mbps = 1000**2
         print("\n--- Running WiFi Test ---")
+
+        ''' try macOS cli commands first, then try linux cli if necessary '''
         try:
             ip = subprocess.check_output('ipconfig getifaddr en0', shell=True).decode('UTF-8')#.split('\n')[0]
             device_ip = str(ip.split('\n')[0])
@@ -91,10 +96,13 @@ def write_to_file(file_path:str, df_out:pd.DataFrame):
 if __name__ == "__main__":
     test_count = 1*10**3
     sample_rate = 5*60  # tests run per seconds (max)
+    os_ = 'mac'
 
     run_count, last_run = 0, datetime.datetime.now()
     while run_count < test_count:
         last_run = datetime.datetime.now()
+        #initialize run_test
+        wifi_test = run_test(os_)
         results = run_test.run_test()
         res_df = run_test.restuls_to_df(results)
 
