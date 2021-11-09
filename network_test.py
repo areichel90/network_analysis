@@ -17,9 +17,16 @@ class run_test:
         try:
             ip = subprocess.check_output('ipconfig getifaddr en0', shell=True).decode('UTF-8')#.split('\n')[0]
             device_ip = str(ip.split('\n')[0])
-        except:
+        except KeyError:
+            # test wifi interface - wlan0
+            print('trying wifi')
             device_ip = ni.ifaddresses('wlan0')[ni.AF_INET][0]['addr']
-            
+        except:
+            # if wifi is not connected or turned off, test ethernet
+            print('trying ethernet')
+            device_ip = ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
+        print(device_ip)
+    
         device_ssid = run_test.get_ssid()['SSID']
         print(f"{device_ssid}:  {device_ip}")
 
@@ -68,7 +75,8 @@ class run_test:
             ssid = subprocess.check_output('iwgetid', shell=True) 
             ssid = ssid.decode('UTF-8')
             ssid = ssid.split('ESSID:')[1].split('\n')[0]
-            params_dict={'SSID':ssid}        
+            params_dict={'SSID':ssid}
+        
         return params_dict
 
 
