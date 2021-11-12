@@ -118,8 +118,11 @@ if __name__ == "__main__":
 
         print(res_df)
 
-        # write file to csv
-        write_to_file("wifi_test.csv", res_df)
+        # write file to csv - try usb first,  then write to local
+        try:
+            write_to_file("/media/usb/network_test/wifi_test.csv")
+        except:
+            write_to_file("wifi_test.csv", res_df)
 
         # TODO: Add check for results std dev, re-run test if above a threshold
 
