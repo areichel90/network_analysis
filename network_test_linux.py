@@ -30,7 +30,7 @@ class run_test:
         print(f"{device_ssid}:  {device_ip}")
 
         # run test
-        servers, run_dict=[10292,27031,12188,38461], {}
+        servers, run_dict=[10292,27031,12188,38461,4920,5723], {}
         try:
             wifi = speedtest.Speedtest()
             wifi.get_servers(servers)
@@ -122,7 +122,7 @@ if __name__ == "__main__":
         usb_path = "/media/usb/network_test/"
         try:
             print(f"Attempting to write results to: {usb_path}")
-            write_to_file(os.path.join(usb_path,"wifi_test.csv")
+            write_to_file(os.path.join(usb_path,"wifi_test.csv"))
         except:
             print(f"USB write failed, saving locally")
             write_to_file("wifi_test.csv", res_df)
