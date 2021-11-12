@@ -30,7 +30,7 @@ class run_test:
         print(f"{device_ssid}:  {device_ip}")
 
         # run test
-        servers, run_dict=[10292,27031, 12188], {}
+        servers, run_dict=[10292,27031,12188,38461], {}
         try:
             wifi = speedtest.Speedtest()
             wifi.get_servers(servers)
