@@ -119,9 +119,12 @@ if __name__ == "__main__":
         print(res_df)
 
         # write file to csv - try usb first,  then write to local
+        usb_path = "/media/usb/network_test/"
         try:
-            write_to_file("/media/usb/network_test/wifi_test.csv")
+            print(f"Attempting to write results to: {usb_path}")
+            write_to_file(os.path.join(usb_path,"wifi_test.csv")
         except:
+            print(f"USB write failed, saving locally")
             write_to_file("wifi_test.csv", res_df)
 
         # TODO: Add check for results std dev, re-run test if above a threshold
