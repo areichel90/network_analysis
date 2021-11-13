@@ -126,7 +126,8 @@ if __name__ == "__main__":
         except:
             print(f"USB write failed, saving locally and copying to usb")
             write_to_file("wifi_test.csv", res_df)
-            subprocess.check_output(f"sudo cp wifi_test.csv {usb_path}", shell=True)
+            copy_result = subprocess.check_output(f"sudo cp wifi_test.csv {usb_path}", shell=True)
+            print(f"file copy return: {copy_result}")
 
         # TODO: Add check for results std dev, re-run test if above a threshold
 
