@@ -143,3 +143,5 @@ if __name__ == "__main__":
             time.sleep(30)
             time_now = datetime.datetime.now()
             time_delta = time_now - last_run
+    
+    print("Test Completed!"
