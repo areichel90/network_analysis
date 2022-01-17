@@ -30,7 +30,7 @@ class run_test:
         print(f"{device_ssid}:  {device_ip}")
 
         # run test
-        servers, run_dict=[10292,27031,12188,38461,4920,5723,6166,14235], {}
+        servers, run_dict=[10292,27031,12188,38461,4920,5723,6166,14235,22069], {}
         try:
             wifi = speedtest.Speedtest()
             wifi.get_servers(servers)
@@ -52,6 +52,8 @@ class run_test:
                 print (f"{run_time}:\t{test_results}")
 
         except:
+	    #TODO: If no servers from above list are available for test, make sure internet is 
+	    # still connected, and indicate connectivity in csv output
             time_now = datetime.datetime.today()
             run_time = f"{time_now.year}{time_now.month}{time_now.day}_{time_now.hour}:{time_now.minute}:{time_now.second}"
             print(f"Test Failure: {run_time}")
