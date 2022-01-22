@@ -30,7 +30,7 @@ class run_test:
         print(f"{device_ssid}:  {device_ip}")
 
         # run test
-        servers, run_dict=[10292,27031,12188,38461,4920,5723,6166,14235,22069], {}
+        servers, run_dict=[10292,27031,12188,38461,4920,5723,6166,14235,22069,43263], {}
         try:
             wifi = speedtest.Speedtest()
             wifi.get_servers(servers)
@@ -111,7 +111,8 @@ if __name__ == "__main__":
     os_ = 'mac'
 
     run_count, last_run = 0, datetime.datetime.now()
-    while run_count < test_count:
+    while True:
+	print(f"Run Count: {run_count}")
         last_run = datetime.datetime.now()
         #initialize run_test
         wifi_test = run_test(os_)
