@@ -64,6 +64,7 @@ class run_test:
                             "device_ip":"None"}
             run_dict[run_time] = test_results
         return run_dict
+        
 
     def get_ssid():
         '''try:
@@ -108,7 +109,7 @@ def write_to_file(file_path:str, df_out:pd.DataFrame):
 if __name__ == "__main__":
     test_count = 1*10**3
     sample_rate = 5*60  # tests run per seconds (max)
-    os_ = 'mac'
+    os_ = 'linux'
 
     run_count, last_run = 0, datetime.datetime.now()
     while True:
