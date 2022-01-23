@@ -39,7 +39,7 @@ class run_test:
             
             for i in range(test_count):
                 time_now = datetime.datetime.today()
-                run_time = f"{time_now.year}{time_now.month}{time_now.day}_{time_now.hour}:{time_now.minute}:{time_now.second}"
+                run_time = f"{time_now.year}{'%02d'%(time_now.month)}{time_now.day}_{time_now.hour}:{time_now.minute}:{time_now.second}"
 
                 download = wifi.download()/(bps_mbps)
                 upload = wifi.upload()/(bps_mbps)
