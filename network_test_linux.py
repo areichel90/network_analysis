@@ -4,12 +4,14 @@ import numpy as np
 import netifaces as ni
 import datetime, subprocess, socket
 import speedtest, sys, os, time
+sys.path.insert(0, "..")
+from SimpleREST import network_test_post
 
 class run_test:
     def __init__(self, os_):
         print(os_)
 
-    def run_test(test_count=5):
+    def run_test(test_count=1):
         bps_mbps = 1000**2
         print("\n--- Running WiFi Test ---")
 
@@ -39,7 +41,7 @@ class run_test:
             
             for i in range(test_count):
                 time_now = datetime.datetime.today()
-                run_time = f"{time_now.year}{'%02d'%(time_now.month)}{time_now.day}_{time_now.hour}:{time_now.minute}:{time_now.second}"
+                run_time = f"{time_now.year}{'%02d'%(time_now.month)}{'%02d'%(time_now.day)}_{time_now.hour}:{time_now.minute}:{time_now.second}"
 
                 download = wifi.download()/(bps_mbps)
                 upload = wifi.upload()/(bps_mbps)
@@ -55,7 +57,7 @@ class run_test:
 	    #TODO: If no servers from above list are available for test, make sure internet is 
 	    # still connected, and indicate connectivity in csv output
             time_now = datetime.datetime.today()
-            run_time = f"{time_now.year}{time_now.month}{time_now.day}_{time_now.hour}:{time_now.minute}:{time_now.second}"
+            run_time = f"{time_now.year}{'%02d'%(time_now.month)}{time_now.day}_{time_now.hour}:{time_now.minute}:{time_now.second}"
             print(f"Test Failure: {run_time}")
 
             test_results = {"down":np.nan,
@@ -106,6 +108,17 @@ def write_to_file(file_path:str, df_out:pd.DataFrame):
     df_out.to_csv(file_path)
 
 
+def post_or_put(payload, route = "http://127.0.0.1:8000/sandbox"):
+    #device = payload[0]['device']
+
+    #try:  # try GET of current device, and put (post if try fails)
+    #    network_test_post.payload_get(endpoint=route+"")
+
+    print(f"Posting to results server! ({route})\n{payload}")
+    network_test_post.post_payload(endpoint=route, payload=payload)
+    
+
+
 if __name__ == "__main__":
     test_count = 1*10**3
     sample_rate = 5*60  # tests run per seconds (max)
@@ -127,8 +140,11 @@ if __name__ == "__main__":
         try:
             print(f"\nAttempting to write results to: {usb_path}")
             write_to_file(os.path.join(usb_path,"wifi_test.csv"))
+            post_or_put(payload=results)
+            
         except:
             print(f"USB write failed, saving locally and copying to usb")
+            post_or_put(payload=results)
             write_to_file("wifi_test.csv", res_df)
             try:
                 copy_result = subprocess.check_output(f"sudo cp wifi_test.csv {usb_path}", shell=True)
