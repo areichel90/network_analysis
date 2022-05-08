@@ -109,13 +109,19 @@ def write_to_file(file_path:str, df_out:pd.DataFrame):
 
 
 def post_or_put(payload, route = "http://127.0.0.1:8000/sandbox"):
-    #device = payload[0]['device']
+    device = 'ethernet'
 
-    #try:  # try GET of current device, and put (post if try fails)
-    #    network_test_post.payload_get(endpoint=route+"")
-
-    print(f"Posting to results server! ({route})\n{payload}")
-    network_test_post.post_payload(endpoint=route, payload=payload)
+    try:  # try GET of current device, and put (post if try fails)
+        endpoint = route+"/"+device
+        print(f"Trying PUT: {endpoint}")
+        test = network_test_post.put_payload(endpoint=endpoint, payload=payload)
+        print(test)
+    except:
+        pass
+    if test == None:
+        print("PUT failed. Trying POST")
+        network_test_post.post_payload(endpoint=route, payload=payload)
+        
     
 
 
