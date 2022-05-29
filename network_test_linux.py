@@ -32,13 +32,12 @@ class run_test:
         print(f"{device_ssid}:  {device_ip}")
 
         # run test
-        servers, run_dict=[10292,27031,12188,38461,4920,5723,6166,14235,22069,43263], {}
+        servers, run_dict=[49834,10292,27031,12188,38461,4920,5723,6166,14235,22069,43263], {}
         try:
             wifi = speedtest.Speedtest()
             wifi.get_servers(servers)
-            #wifi.get_servers(servers)
             wifi.get_best_server()
-            
+           
             for i in range(test_count):
                 time_now = datetime.datetime.today()
                 run_time = f"{time_now.year}{'%02d'%(time_now.month)}{'%02d'%(time_now.day)}_{time_now.hour}:{time_now.minute}:{time_now.second}"
@@ -108,7 +107,7 @@ def write_to_file(file_path:str, df_out:pd.DataFrame):
     df_out.to_csv(file_path)
 
 
-def post_or_put(payload, route = "http://127.0.0.1:8000/sandbox"):
+def post_or_put(payload, route = "http://192.168.1.11:8000/sandbox"):
     device = 'ethernet'
 
     try:  # try GET of current device, and put (post if try fails)
@@ -118,10 +117,13 @@ def post_or_put(payload, route = "http://127.0.0.1:8000/sandbox"):
         print(test)
     except:
         pass
+    
+    print(f"REQUEST: {test}")
+
     if test == None:
         print("PUT failed. Trying POST")
-        network_test_post.post_payload(endpoint=route, payload=payload)
-        
+        response = network_test_post.post_payload(endpoint=route, payload=payload)
+    print(f"REQUEST: {response}")
     
 
 
